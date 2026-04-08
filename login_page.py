@@ -1,6 +1,5 @@
 import flet as ft
-from database import check_user  # Bazanı yoxlayan funksiyanı import edirik
-
+from database import check_user  
 class LoginPage(ft.View):
     def __init__(self, page: ft.Page):
         super().__init__(
@@ -10,7 +9,6 @@ class LoginPage(ft.View):
             bgcolor=ft.Colors.SURFACE, 
         )
 
-        # 1. Giriş sahələrini (input) dəyişən kimi təyin edirik
         self.email_field = ft.TextField(
             hint_text="ornek@mail.com",
             prefix_icon=ft.Icons.EMAIL_OUTLINED,
@@ -27,7 +25,6 @@ class LoginPage(ft.View):
             bgcolor=ft.Colors.with_opacity(0.05, ft.Colors.GREY_500)
         )
 
-        # 2. Giriş Məntiqi
         def handle_login(e):
             email = self.email_field.value
             password = self.password_field.value
@@ -36,14 +33,13 @@ class LoginPage(ft.View):
                 self.show_snack("Lütfen tüm alanları doldurun!")
                 return
 
-            # Verilənlər bazasında yoxlayırıq
             if check_user(email, password):
-                print("Giriş başarılı!")
-                self.show_snack("Giriş başarılı! Yönlendiriliyorsunuz...")
-                
-                # ƏSAS DÜZƏLİŞ BURADADIR: 
-                # self.page istifadə edərək dashboard-a yönləndiririk
-                self.page.go("/dashboard") 
+                if email == "admin@mail.com" and password == "admin123":
+                    self.show_snack("Admin girişi başarılı!")
+                    self.page.go("/admin")  # Admin panelinə gedir
+                else:
+                    self.show_snack("Giriş başarılı!")
+                    self.page.go("/dashboard") # Normal istifadəçi panelinə gedir
             else:
                 self.show_snack("E-posta veya şifre hatalı!")
 
@@ -55,7 +51,6 @@ class LoginPage(ft.View):
                 width=350,
                 padding=20,
                 content=ft.Column([
-                    # Başlıq
                     ft.Column([
                         ft.Text("Tekrar Hoş Geldiniz", size=28, weight="bold"),
                         ft.Text("Hesabınıza erişmek için bilgilerinizi girin.", 
@@ -64,7 +59,6 @@ class LoginPage(ft.View):
 
                     ft.Divider(height=20, color=ft.Colors.TRANSPARENT),
 
-                    # Inputlar
                     ft.Column([
                         ft.Text("E-posta Adresi", weight="bold", size=14),
                         self.email_field,
@@ -77,7 +71,6 @@ class LoginPage(ft.View):
 
                     ft.Divider(height=10, color=ft.Colors.TRANSPARENT),
 
-                    # Giriş Düyməsi
                     ft.Button(
                         "Giriş Yap",
                         bgcolor=ft.Colors.BLUE_600,

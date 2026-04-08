@@ -1,6 +1,6 @@
 import flet as ft
 from database import init_db
-
+from admin import AdminDashboard
 from login_page import LoginPage
 
 from signup_page import SignupPage
@@ -12,7 +12,7 @@ def main(page: ft.Page):
     page.window.width = 390
     page.window.height = 800
     page.window.resizable = False
-    page.theme_mode = ft.ThemeMode.LIGHT # Başlanğıc mövzu
+    page.theme_mode = ft.ThemeMode.LIGHT 
     page.padding = 0
     def change_theme(e):
         if page.theme_mode == ft.ThemeMode.DARK:
@@ -38,14 +38,16 @@ def main(page: ft.Page):
         )
         if page.route == "/" or page.route == "":
             view = LoginPage(page)
-            view.appbar = common_appbar # AppBar-ı səhifəyə bağlayırıq
+            view.appbar = common_appbar
             page.views.append(view)
 
         elif page.route == "/signup":
             view = SignupPage(page)
-            view.appbar = common_appbar # AppBar-ı bura da əlavə edirik
+            view.appbar = common_appbar 
             page.views.append(view)
-            
+        elif page.route == "/admin":
+            page.views.append(AdminDashboard(page))
+    
         page.update()
     def view_pop(e):
         if len(page.views) > 1:

@@ -1,5 +1,5 @@
 import flet as ft
-from database import register_user  # Bazaya yazan funksiyanı import edirik
+from database import register_user  
 
 class SignupPage(ft.View):
     def __init__(self, page: ft.Page):
@@ -10,31 +10,26 @@ class SignupPage(ft.View):
             scroll=ft.ScrollMode.ADAPTIVE, 
         )
         
-        # --- INPUTLARI DƏYİŞƏN KİMİ TƏYİN EDİRİK (Dizayn eynidir) ---
         self.name_field = ft.TextField(hint_text="Örn. Ahmet Yılmaz", prefix_icon=ft.Icons.PERSON_OUTLINE, border_radius=10)
         self.email_field = ft.TextField(hint_text="ahmet@istan.com", prefix_icon=ft.Icons.EMAIL_OUTLINED, border_radius=10)
         self.phone_field = ft.TextField(hint_text="+90 5XX XXX XX XX", prefix_icon=ft.Icons.PHONE_OUTLINED, border_radius=10)
         self.pass_field = ft.TextField(hint_text="********", password=True, can_reveal_password=True, prefix_icon=ft.Icons.LOCK_OUTLINE, border_radius=10)
         self.pass_confirm_field = ft.TextField(hint_text="********", password=True, prefix_icon=ft.Icons.LOCK_OUTLINE, border_radius=10)
 
-        # --- QEYDİYYAT MƏNTİQİ ---
         def handle_signup(e):
             name = self.name_field.value
             email = self.email_field.value
             password = self.pass_field.value
             confirm_password = self.pass_confirm_field.value
 
-            # 1. Boşluq yoxlaması
             if not name or not email or not password:
                 self.show_snack("Lütfen gerekli alanları doldurun!")
                 return
 
-            # 2. Şifrə təkrarı yoxlaması
             if password != confirm_password:
                 self.show_snack("Şifreler uyuşmuyor!")
                 return
 
-            # 3. Bazaya yazmaq
             if register_user(email, password): # database.py funksiyasını çağırırıq
                 print(f"Kayıt başarılı: {email}")
                 self.show_snack("Kayıt başarılı! Giriş yapabilirsiniz.")
@@ -47,14 +42,12 @@ class SignupPage(ft.View):
                 width=400,
                 padding=20,
                 content=ft.Column([
-                    # Başlıq hissəsi
                     ft.Column([
                         ft.Text("Aramıza Katılın", size=28, weight="bold"),
                         ft.Text("Lütfen hesap oluşturmak için bilgilerinizi girin.", 
                                 size=14, color=ft.Colors.GREY_600),
                     ], spacing=5),
 
-                    # Inputlar (Dizaynı pozmadan dəyişənləri yerləşdiririk)
                     ft.Column([
                         ft.Text("Ad Soyad", weight="bold", size=14),
                         self.name_field,
@@ -72,7 +65,6 @@ class SignupPage(ft.View):
                         self.pass_confirm_field,
                     ], spacing=8),
 
-                    # Düymə (on_click hadisəsi bağlandı)
                     ft.Button(
                         content=ft.Row([
                             ft.Text("Kayıt Ol", size=16, weight="bold"),
@@ -124,7 +116,6 @@ class SignupPage(ft.View):
             )
         ]
 
-    # Mesaj göstərmək üçün köməkçi funksiya
     def show_snack(self, message):
         self.page.snack_bar = ft.SnackBar(ft.Text(message), action="OK")
         self.page.snack_bar.open = True

@@ -3,7 +3,8 @@ import sqlite3
 def init_db():
     conn = sqlite3.connect("users.db", check_same_thread=False)
     cursor = conn.cursor()
-    # İstifadəçilər cədvəlini yaradırıq
+    
+    # 1. İstifadəçilər cədvəli
     cursor.execute("""
         CREATE TABLE IF NOT EXISTS users (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -11,8 +12,20 @@ def init_db():
             password TEXT
         )
     """)
+    
+    # 2. DRONLAR cədvəli (BU HİSSƏNİ ƏLAVƏ ET)
+    cursor.execute("""
+        CREATE TABLE IF NOT EXISTS drones (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            name TEXT,
+            description TEXT
+        )
+    """)
+    
     conn.commit()
     conn.close()
+
+# --- İSTİFADƏÇİ FUNKSİYALARI ---
 
 def register_user(username, password):
     try:
@@ -23,7 +36,6 @@ def register_user(username, password):
         conn.close()
         return True
     except sqlite3.IntegrityError:
-        # Əgər istifadəçi artıq mövcuddursa
         return False
 
 def check_user(username, password):
@@ -33,3 +45,41 @@ def check_user(username, password):
     user = cursor.fetchone()
     conn.close()
     return user is not None
+
+# --- DRON FUNKSİYALARI (BU HİSSƏNİ ƏLAVƏ ET) ---
+
+def add_drone(name, description):
+    """Yeni dronu bazaya əlavə edir"""
+    conn = sqlite3.connect("users.db", check_same_thread=False)
+    cursor = conn.cursor()
+    cursor.execute("INSERT INTO drones (name, description) VALUES (?, ?)", (name, description))
+    conn.commit()
+    conn.close()
+
+def get_drones():
+    """Bütün dronları siyahı şəklində qaytarır"""
+    conn = sqlite3.connect("users.db", check_same_thread=False)
+    cursor = conn.cursor()
+    cursor.execute("SELECT name, description FROM drones")
+    rows = cursor.fetchall()
+    conn.close()
+    return rows
+
+def delete_drone(name):
+    """Dronu adına görə bazadan silir"""
+    conn = sqlite3.connect("users.db", check_same_thread=False)
+    cursor = conn.cursor()
+    cursor.execute("DELETE FROM drones WHERE name = ?", (name,))
+    conn.commit()
+    conn.close()
+
+def update_drone(old_name, new_name, new_desc):
+    """Dronun məlumatlarını köhnə adına əsasən yeniləyir"""
+    conn = sqlite3.connect("users.db", check_same_thread=False)
+    cursor = conn.cursor()
+    cursor.execute(
+        "UPDATE drones SET name = ?, description = ? WHERE name = ?",
+        (new_name, new_desc, old_name)
+    )
+    conn.commit()
+    conn.close()
