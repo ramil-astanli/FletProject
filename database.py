@@ -4,7 +4,6 @@ def init_db():
     conn = sqlite3.connect("users.db", check_same_thread=False)
     cursor = conn.cursor()
     
-    # 1. İstifadəçilər cədvəli
     cursor.execute("""
         CREATE TABLE IF NOT EXISTS users (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -13,7 +12,6 @@ def init_db():
         )
     """)
     
-    # 2. DRONLAR cədvəli (BU HİSSƏNİ ƏLAVƏ ET)
     cursor.execute("""
         CREATE TABLE IF NOT EXISTS drones (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -25,7 +23,6 @@ def init_db():
     conn.commit()
     conn.close()
 
-# --- İSTİFADƏÇİ FUNKSİYALARI ---
 
 def register_user(username, password):
     try:
@@ -45,8 +42,6 @@ def check_user(username, password):
     user = cursor.fetchone()
     conn.close()
     return user is not None
-
-# --- DRON FUNKSİYALARI (BU HİSSƏNİ ƏLAVƏ ET) ---
 
 def add_drone(name, description):
     """Yeni dronu bazaya əlavə edir"""

@@ -34,7 +34,6 @@ class LoginPage(ft.View):
                 self.show_snack("Lütfen tüm alanları doldurun!")
                 return
 
-            # FastAPI-yə sorğu göndəririk
             try:
                 with httpx.Client() as client:
                     response = client.post(

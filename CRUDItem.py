@@ -8,7 +8,6 @@ class CRUDItem(ft.Column):
         self.description = description
         self.delete_callback = delete_callback
 
-        # 1. GÖRNÜŞ REJİMİ (ListTile)
         self.text_view = ft.ListTile(
             leading=ft.Icon(ft.Icons.AIRPLANEMODE_ACTIVE, color="blue"),
             title=ft.Text(self.name, weight="bold"),
@@ -19,7 +18,6 @@ class CRUDItem(ft.Column):
             ], tight=True)
         )
 
-        # 2. REDAKTƏ REJİMİ (TextFields)
         self.name_edit = ft.TextField(value=self.name, label="Drone Adı", border_radius=10)
         self.desc_edit = ft.TextField(value=self.description, label="Təsvir", border_radius=10)
         
@@ -37,7 +35,6 @@ class CRUDItem(ft.Column):
             ], alignment="end")
         ], visible=False, spacing=10)
 
-        # Elementləri Column-a əlavə edirik
         self.controls = [
             ft.Container(
                 content=ft.Column([self.text_view, self.edit_view]),
@@ -61,13 +58,12 @@ class CRUDItem(ft.Column):
     def delete_clicked(self, e):
         try:
             with httpx.Client() as client:
-                # Backend-ə silmə istəyi göndəririk
                 response = client.post(
                     "http://127.0.0.1:8000/delete_drone", 
                     json={"name": self.name}
                 )
             if response.status_code == 200:
-                self.delete_callback(self) # UI-dan silmək üçün AdminDashboard-dakı funksiyanı çağırır
+                self.delete_callback(self) 
         except Exception as ex:
             print(f"Silmə xətası: {ex}")
 
@@ -78,7 +74,6 @@ class CRUDItem(ft.Column):
 
         try:
             with httpx.Client() as client:
-                # Backend-ə yeniləmə istəyi göndəririk
                 response = client.post(
                     "http://127.0.0.1:8000/update_drone", 
                     json={
@@ -89,12 +84,11 @@ class CRUDItem(ft.Column):
                 )
             
             if response.status_code == 200:
-                # UI-da məlumatları yeniləyirik
                 self.name = new_name
                 self.description = new_desc
                 self.text_view.title.value = self.name
                 self.text_view.subtitle.value = self.description
-                self.cancel_clicked(e) # Redaktə rejimini bağla
+                self.cancel_clicked(e) 
             else:
                 print("Yeniləmə uğursuz oldu")
         except Exception as ex:

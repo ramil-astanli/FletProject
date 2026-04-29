@@ -31,16 +31,14 @@ def main(page: ft.Page):
     )
 
     def route_change(route):
-        # Səhifələri təmizləyirik
         page.views.clear()
         
         common_appbar = ft.AppBar(
             title=ft.Text("Astan Drone", weight="bold"),
-            bgcolor="surfacevariant",  # Heç bir ft.colors yazmağa ehtiyac yoxdur
+            bgcolor="surfacevariant", 
             actions=[theme_button],
         )
 
-        # Route yoxlaması
         if page.route == "/" or page.route == "":
             login_view = LoginPage(page)
             login_view.appbar = common_appbar
@@ -53,7 +51,6 @@ def main(page: ft.Page):
 
         elif page.route == "/admin":
             admin_view = AdminDashboard(page)
-            # Admin üçün də appbar istəyirsənsə bura əlavə edə bilərsən
             page.views.append(admin_view)
     
         page.update()
@@ -62,17 +59,13 @@ def main(page: ft.Page):
         if len(page.views) > 1:
             page.views.pop()
             top_view = page.views[-1]
-            page.route = top_view.route # page.go yerinə bunu istifadə et
+            page.route = top_view.route 
             page.update()
-    # Event handler-ləri təyin edirik
     page.on_route_change = route_change
     page.on_view_pop = view_pop
 
-    # İlk səhifəni təyin edirik
     page.route = "/"
-    # mütləq route_change-i birbaşa çağırırıq ki, ilk açılışda ağ ekran olmasın
     route_change(page.route)
 
 if __name__ == "__main__":
-    # ft.app yerinə ft.run istifadə edirik (0.80.0+ üçün)
     ft.run(main)

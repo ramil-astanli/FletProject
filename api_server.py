@@ -4,8 +4,6 @@ import database
 
 app = FastAPI()
 
-# --- MODELLƏR ---
-
 class LoginRequest(BaseModel):
     email: str
     password: str
@@ -18,17 +16,14 @@ class DroneCreate(BaseModel):
     name: str
     description: str
 
-# YENİ: Silmə üçün model
 class DeleteRequest(BaseModel):
     name: str
 
-# YENİ: Yeniləmə üçün model
 class UpdateRequest(BaseModel):
     old_name: str
     new_name: str
     description: str
 
-# --- ENDPOINTLƏR ---
 
 @app.post("/login")
 def login_api(data: LoginRequest):
@@ -54,13 +49,11 @@ def add_drone_api(drone: DroneCreate):
     database.add_drone(drone.name, drone.description)
     return {"status": "success"}
 
-# YENİ: Dronu silmək üçün endpoint
 @app.post("/delete_drone")
 def delete_drone_api(data: DeleteRequest):
     database.delete_drone(data.name)
     return {"status": "deleted"}
 
-# YENİ: Dronu yeniləmək üçün endpoint
 @app.post("/update_drone")
 def update_drone_api(data: UpdateRequest):
     database.update_drone(data.old_name, data.new_name, data.description)

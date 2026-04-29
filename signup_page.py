@@ -9,19 +9,15 @@ class SignupPage(ft.View):
             vertical_alignment=ft.MainAxisAlignment.CENTER,
             scroll=ft.ScrollMode.ADAPTIVE, 
         )
-        # BU SƏTRİ SİL: self.page = page <-- Xətanın səbəbi budur
         
-        # Qalan bütün kodlar eyni qalır...
      
         
-        # 1. Elementləri təyin edirik
         self.name_field = ft.TextField(label="Ad Soyad", hint_text="Örn. Ahmet Yılmaz", prefix_icon=ft.Icons.PERSON_OUTLINE, border_radius=10, width=350)
         self.email_field = ft.TextField(label="E-posta", hint_text="ahmet@istan.com", prefix_icon=ft.Icons.EMAIL_OUTLINED, border_radius=10, width=350)
         self.phone_field = ft.TextField(label="Telefon", hint_text="+90 5XX XXX XX XX", prefix_icon=ft.Icons.PHONE_OUTLINED, border_radius=10, width=350)
         self.pass_field = ft.TextField(label="Şifre", hint_text="********", password=True, can_reveal_password=True, prefix_icon=ft.Icons.LOCK_OUTLINE, border_radius=10, width=350)
         self.pass_confirm_field = ft.TextField(label="Şifre Tekrar", hint_text="********", password=True, prefix_icon=ft.Icons.LOCK_OUTLINE, border_radius=10, width=350)
 
-        # 2. Düymə və funksionallıq
         def handle_signup(e):
             if not self.name_field.value or not self.email_field.value or not self.pass_field.value:
                 self.show_snack("Lütfen gerekli alanları doldurun!")
@@ -49,7 +45,6 @@ class SignupPage(ft.View):
             except Exception:
                 self.show_snack("Sunucuya bağlanılamadı!")
 
-        # --- ƏSAS HİSSƏ: Elementləri səhifəyə əlavə edirik ---
         self.controls = [
             ft.Container(
                 content=ft.Column([
