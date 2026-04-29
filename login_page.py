@@ -1,4 +1,5 @@
 import flet as ft
+import httpx
 from database import check_user  
 class LoginPage(ft.View):
     def __init__(self, page: ft.Page):
@@ -33,15 +34,27 @@ class LoginPage(ft.View):
                 self.show_snack("Lütfen tüm alanları doldurun!")
                 return
 
-            if check_user(email, password):
-                if email == "admin@mail.com" and password == "admin123":
-                    self.show_snack("Admin girişi başarılı!")
-                    self.page.go("/admin")  # Admin panelinə gedir
+            # FastAPI-yə sorğu göndəririk
+            try:
+                with httpx.Client() as client:
+                    response = client.post(
+                        "http://127.0.0.1:8000/login", 
+                        json={"email": email, "password": password}
+                    )
+                    
+                if response.status_code == 200:
+                    result = response.json()
+                    if result["role"] == "admin":
+                        self.show_snack("Admin girişi başarılı!")
+                        self.page.go("/admin")
+                    else:
+                        self.show_snack("Giriş başarılı!")
+                        self.page.go("/dashboard")
                 else:
-                    self.show_snack("Giriş başarılı!")
-                    self.page.go("/dashboard") # Normal istifadəçi panelinə gedir
-            else:
-                self.show_snack("E-posta veya şifre hatalı!")
+                    self.show_snack("E-posta veya şifre hatalı!")
+                    
+            except Exception as ex:
+                self.show_snack("Sunucuya bağlanılamadı!")
 
         def show_msg(e):
             self.show_snack("Bu özellik yakında aktif edilecek!")
